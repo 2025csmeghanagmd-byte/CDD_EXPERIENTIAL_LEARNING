@@ -1,0 +1,3 @@
+-- CareerBridge MySQL schema
+-- The team must finalize the ER diagram and review table ownership before adding
+-- production tables. Keep schema changes coordinated and version-controlled.

@@ -1,0 +1,2 @@
+-- Optional development/demo seed data.
+-- Add only fictional sample records. Never add real student personal data.
