@@ -1,0 +1,360 @@
+
+.exchange-page {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 48px 24px 70px;
+  color: #172033;
+}
+
+.exchange-heading {
+  text-align: center;
+  padding: 55px 25px;
+  margin-bottom: 30px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #eaf1ff, #f5edff);
+}
+
+.exchange-eyebrow {
+  color: #6355c7;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.exchange-heading h1 {
+  font-size: clamp(30px, 5vw, 46px);
+  margin: 0 0 15px;
+  color: #172554;
+}
+
+.exchange-intro {
+  max-width: 650px;
+  margin: 0 auto 25px;
+  color: #5b6475;
+  line-height: 1.7;
+}
+
+.student-selector {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  margin: 20px auto 10px;
+}
+
+.student-selector input {
+  width: 85px;
+  padding: 9px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: white;
+}
+
+.demo-note {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 12px;
+}
+
+.exchange-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 14px 18px;
+  margin: 20px 0;
+  color: #14532d;
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+}
+
+.exchange-message button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.exchange-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 30px 0 40px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.exchange-tabs button {
+  padding: 12px 20px;
+  border: 1px solid #dbe2ee;
+  border-radius: 30px;
+  background: white;
+  color: #475569;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.exchange-tabs button:hover,
+.exchange-tabs button.active {
+  background: #5145cd;
+  color: white;
+  border-color: #5145cd;
+}
+
+.exchange-loading {
+  text-align: center;
+  color: #64748b;
+  padding: 20px;
+}
+
+.exchange-section {
+  margin-top: 25px;
+}
+
+.section-heading {
+  margin-bottom: 25px;
+}
+
+.section-heading h2,
+.exchange-form-section h2 {
+  color: #172554;
+  font-size: 28px;
+  margin: 0 0 10px;
+}
+
+.section-heading > p:not(.exchange-eyebrow) {
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.exchange-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.exchange-card {
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: white;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.exchange-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.09);
+}
+
+.exchange-card h3 {
+  margin: 15px 0 12px;
+  color: #1e293b;
+  font-size: 20px;
+}
+
+.exchange-card p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.exchange-card strong {
+  color: #334155;
+}
+
+.exchange-tag {
+  display: inline-block;
+  padding: 6px 11px;
+  border-radius: 20px;
+  background: #ede9fe;
+  color: #5b21b6;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.card-details {
+  margin-top: 18px;
+  padding-top: 10px;
+  border-top: 1px solid #edf0f5;
+}
+
+.exchange-form-section {
+  max-width: 680px;
+  margin: 0 auto 45px;
+  padding: 30px;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+}
+
+.exchange-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 22px;
+}
+
+.exchange-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.exchange-form input,
+.exchange-form textarea,
+.exchange-form select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 9px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+  font-weight: 400;
+  outline: none;
+}
+
+.exchange-form input:focus,
+.exchange-form textarea:focus,
+.exchange-form select:focus,
+.student-selector input:focus {
+  border-color: #6355c7;
+  box-shadow: 0 0 0 3px rgba(99, 85, 199, 0.12);
+}
+
+.exchange-form textarea {
+  resize: vertical;
+  min-height: 85px;
+}
+
+.exchange-primary,
+.exchange-secondary,
+.exchange-refresh {
+  display: inline-block;
+  padding: 12px 19px;
+  border: 0;
+  border-radius: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.exchange-primary {
+  background: #5145cd;
+  color: white;
+}
+
+.exchange-primary:hover {
+  background: #3e34a8;
+}
+
+.exchange-secondary {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.exchange-secondary:hover {
+  background: #fecaca;
+}
+
+.exchange-primary:disabled,
+.exchange-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.compact-form {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.exchange-subheading {
+  margin-top: 45px;
+}
+
+.exchange-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+
+.exchange-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 35px 20px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 15px;
+  background: #f8fafc;
+}
+
+.exchange-empty h3 {
+  color: #334155;
+}
+
+.exchange-empty p {
+  color: #64748b;
+}
+
+.exchange-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.exchange-refresh {
+  background: #172554;
+  color: white;
+}
+
+.exchange-refresh:hover {
+  background: #263b78;
+}
+
+@media (max-width: 650px) {
+  .exchange-page {
+    padding: 25px 15px 45px;
+  }
+
+  .exchange-heading {
+    padding: 35px 16px;
+  }
+
+  .student-selector {
+    flex-direction: column;
+  }
+
+  .exchange-tabs {
+    justify-content: flex-start;
+  }
+
+  .exchange-tabs button {
+    font-size: 12px;
+    padding: 10px 13px;
+  }
+
+  .exchange-form-section {
+    padding: 20px;
+  }
+
+  .exchange-grid {
+    grid-template-columns: 1fr;
+  }
+}

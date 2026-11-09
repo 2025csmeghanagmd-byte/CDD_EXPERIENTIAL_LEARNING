@@ -1,7 +1,9 @@
+
 from flask import Flask, jsonify
 from flask_cors import CORS
 from config import Config
 from app.extensions import db, migrate
+
 
 def create_app(config_object=Config):
     app = Flask(__name__)
@@ -18,7 +20,10 @@ def create_app(config_object=Config):
             "message": "CareerBridge API is running"
         }), 200
 
-    # Register module Blueprints here as modules are implemented.
-    # Keep Blueprint registration coordinated to avoid shared-file conflicts.
+    # Campus Skill Exchange module
+    from app.skill_exchange import models
+    from app.skill_exchange.routes import skill_exchange_bp
+
+    app.register_blueprint(skill_exchange_bp)
 
     return app
