@@ -1,42 +1,47 @@
-services:
-  db:
-    image: mysql:8.4
-    restart: unless-stopped
-    environment:
-      MYSQL_DATABASE: careerbridge_db
-      MYSQL_USER: careerbridge_user
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change-this-password}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-this-root-password}
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-change-this-root-password}"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
 
+services:
   backend:
-    build: ./backend
-    restart: unless-stopped
-    environment:
-      SECRET_KEY: ${SECRET_KEY:-local-docker-change-me}
-      DATABASE_URL: mysql+pymysql://careerbridge_user:${MYSQL_PASSWORD:-change-this-password}@db:3306/careerbridge_db
-      CORS_ORIGINS: http://localhost:8080
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: careerbridge-backend
     ports:
       - "5000:5000"
+    environment:
+      SECRET_KEY: local-development-key
+      DATABASE_URL: mysql+pymysql://careerbridge_user:Bridge%402026@mysql:3306/careerbridge_db
+      CORS_ORIGINS: http://localhost:8080
     depends_on:
-      db:
+      mysql:
         condition: service_healthy
 
   frontend:
-    build: ./frontend
-    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: careerbridge-frontend
     ports:
       - "8080:80"
     depends_on:
       - backend
 
+  mysql:
+    image: mysql:8.0
+    container_name: careerbridge-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: local-root-password
+      MYSQL_DATABASE: careerbridge_db
+      MYSQL_USER: careerbridge_user
+      MYSQL_PASSWORD: "Bridge@2026"
+    ports:
+      - "3307:3306"
+    volumes:
+      - careerbridge-db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-plocal-root-password"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
 volumes:
-  mysql_data:
+  careerbridge-db-data:
