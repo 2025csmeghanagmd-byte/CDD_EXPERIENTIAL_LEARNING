@@ -24,13 +24,14 @@ def create_app(config_object=Config):
             "message": "CareerBridge API is running"
         }), 200
 
-    # Register Campus Skill Exchange module
+    # Import Campus Skill Exchange models and routes
     from app.skill_exchange import models
     from app.skill_exchange.routes import skill_exchange_bp
 
+    # Register Campus Skill Exchange routes
     app.register_blueprint(skill_exchange_bp)
 
-    # Create database tables when the application starts
+    # Create database tables if they do not already exist
     with app.app_context():
         db.create_all()
 

@@ -40,11 +40,11 @@ export default function SkillExchangePage() {
 
   async function apiRequest(path, options = {}) {
     const response = await fetch(`${API}${path}`, {
+      ...options,
       headers: {
         "Content-Type": "application/json",
         ...options.headers,
       },
-      ...options,
     });
 
     const result = await response.json();
@@ -134,6 +134,11 @@ export default function SkillExchangePage() {
   async function handleSendRequest(event, receiverId) {
     event.preventDefault();
 
+    if (Number(studentId) === Number(receiverId)) {
+      setMessage("You cannot send a practice request to yourself.");
+      return;
+    }
+
     try {
       await apiRequest("/requests", {
         method: "POST",
@@ -145,6 +150,15 @@ export default function SkillExchangePage() {
       });
 
       setMessage("Your practice request was sent!");
+
+      setRequestForm({
+        practice_type: "Technical Mock Interview",
+        preferred_date: "",
+        preferred_time: "",
+        campus_location: "Library Discussion Area",
+        message: "",
+      });
+
       await loadData();
     } catch (error) {
       setMessage(error.message);
@@ -176,6 +190,7 @@ export default function SkillExchangePage() {
   ];
 
   const today = new Date();
+
   const todayString = [
     today.getFullYear(),
     String(today.getMonth() + 1).padStart(2, "0"),
@@ -185,7 +200,9 @@ export default function SkillExchangePage() {
   return (
     <main className="exchange-page">
       <section className="exchange-heading">
-        <p className="exchange-eyebrow">LEARN • SHARE • PRACTISE</p>
+        <p className="exchange-eyebrow">
+          LEARN • SHARE • PRACTISE
+        </p>
 
         <h1>Campus Skill Exchange</h1>
 
@@ -196,6 +213,7 @@ export default function SkillExchangePage() {
 
         <label className="student-selector">
           Demo Student ID
+
           <input
             type="number"
             min="1"
@@ -213,6 +231,7 @@ export default function SkillExchangePage() {
       {message && (
         <div className="exchange-message" role="status">
           <span>{message}</span>
+
           <button
             type="button"
             aria-label="Dismiss message"
@@ -242,19 +261,31 @@ export default function SkillExchangePage() {
         </p>
       )}
 
+      {/* EXPLORE SKILLS */}
+
       {!loading && activeTab === "explore" && (
         <section className="exchange-section">
           <div className="section-heading">
-            <p className="exchange-eyebrow">DISCOVER AND LEARN</p>
+            <p className="exchange-eyebrow">
+              DISCOVER AND LEARN
+            </p>
+
             <h2>Explore Skills</h2>
-            <p>Discover skills that fellow students are offering.</p>
+
+            <p>
+              Discover skills that fellow students are offering.
+            </p>
           </div>
 
           <div className="exchange-grid">
             {skills.length === 0 ? (
               <div className="exchange-empty">
                 <h3>No skill offers yet</h3>
-                <p>Be the first to share a skill with your campus!</p>
+
+                <p>
+                  Be the first to share a skill with your campus!
+                </p>
+
                 <button
                   type="button"
                   className="exchange-primary"
@@ -266,13 +297,139 @@ export default function SkillExchangePage() {
             ) : (
               skills.map((skill) => (
                 <article className="exchange-card" key={skill.id}>
-                  <span className="exchange-tag">{skill.category}</span>
+                  <span className="exchange-tag">
+                    {skill.category}
+                  </span>
+
                   <h3>{skill.skill_name}</h3>
-                  <p>{skill.description || "No description provided."}</p>
+
+                  <p>
+                    {skill.description || "No description provided."}
+                  </p>
+
                   <div className="card-details">
-                    <p><strong>Student:</strong> {skill.student_id}</p>
-                    <p><strong>Mode:</strong> {skill.mode}</p>
+                    <p>
+                      <strong>Student:</strong> {skill.student_id}
+                    </p>
+
+                    <p>
+                      <strong>Mode:</strong> {skill.mode}
+                    </p>
                   </div>
+
+                  {/* REQUEST PRACTICE FORM */}
+
+                  {Number(skill.student_id) !== Number(studentId) && (
+                    <form
+                      onSubmit={(event) =>
+                        handleSendRequest(event, skill.student_id)
+                      }
+                      className="exchange-form compact-form"
+                    >
+                      <h4>Request Practice</h4>
+
+                      <label>
+                        Practice type
+
+                        <select
+                          value={requestForm.practice_type}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              practice_type: event.target.value,
+                            })
+                          }
+                        >
+                          <option>Technical Mock Interview</option>
+                          <option>Skill Learning Session</option>
+                          <option>Peer Practice</option>
+                          <option>General Mock Interview</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        Practice date
+
+                        <input
+                          required
+                          type="date"
+                          min={todayString}
+                          value={requestForm.preferred_date}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              preferred_date: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        Practice time
+
+                        <input
+                          required
+                          value={requestForm.preferred_time}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              preferred_time: event.target.value,
+                            })
+                          }
+                          placeholder="3:00 PM"
+                        />
+                      </label>
+
+                      <label>
+                        Campus location
+
+                        <select
+                          value={requestForm.campus_location}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              campus_location: event.target.value,
+                            })
+                          }
+                        >
+                          <option>Library Discussion Area</option>
+                          <option>Seminar Hall</option>
+                          <option>College Canteen</option>
+                          <option>Common Area</option>
+                          <option>Available Classroom</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        Message
+
+                        <textarea
+                          value={requestForm.message}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              message: event.target.value,
+                            })
+                          }
+                          placeholder="Would you like to practise together?"
+                          rows="3"
+                        />
+                      </label>
+
+                      <button
+                        className="exchange-primary"
+                        type="submit"
+                      >
+                        Request Practice
+                      </button>
+                    </form>
+                  )}
+
+                  {Number(skill.student_id) === Number(studentId) && (
+                    <p className="demo-note">
+                      This is your own skill offer.
+                    </p>
+                  )}
                 </article>
               ))
             )}
@@ -280,17 +437,26 @@ export default function SkillExchangePage() {
         </section>
       )}
 
+      {/* OFFER A SKILL */}
+
       {!loading && activeTab === "offer" && (
         <section className="exchange-form-section">
           <div className="section-heading">
-            <p className="exchange-eyebrow">SHARE YOUR KNOWLEDGE</p>
+            <p className="exchange-eyebrow">
+              SHARE YOUR KNOWLEDGE
+            </p>
+
             <h2>Offer a Skill</h2>
-            <p>Share something you can teach other students.</p>
+
+            <p>
+              Share something you can teach other students.
+            </p>
           </div>
 
           <form onSubmit={handleOfferSkill} className="exchange-form">
             <label>
               Skill name
+
               <input
                 required
                 value={skillForm.skill_name}
@@ -306,6 +472,7 @@ export default function SkillExchangePage() {
 
             <label>
               Category
+
               <input
                 required
                 value={skillForm.category}
@@ -321,6 +488,7 @@ export default function SkillExchangePage() {
 
             <label>
               Description
+
               <textarea
                 value={skillForm.description}
                 onChange={(event) =>
@@ -336,6 +504,7 @@ export default function SkillExchangePage() {
 
             <label>
               Teaching mode
+
               <select
                 value={skillForm.mode}
                 onChange={(event) =>
@@ -357,18 +526,27 @@ export default function SkillExchangePage() {
         </section>
       )}
 
+      {/* INTERVIEW BUDDY */}
+
       {!loading && activeTab === "buddy" && (
         <section className="exchange-section">
           <div className="exchange-form-section">
             <div className="section-heading">
-              <p className="exchange-eyebrow">PRACTISE TOGETHER</p>
+              <p className="exchange-eyebrow">
+                PRACTISE TOGETHER
+              </p>
+
               <h2>My Interview Profile</h2>
-              <p>Tell other students what kind of practice you need.</p>
+
+              <p>
+                Tell other students what kind of practice you need.
+              </p>
             </div>
 
             <form onSubmit={handleSaveProfile} className="exchange-form">
               <label>
                 Interview type
+
                 <select
                   value={profileForm.interview_type}
                   onChange={(event) =>
@@ -387,6 +565,7 @@ export default function SkillExchangePage() {
 
               <label>
                 Skills
+
                 <input
                   value={profileForm.skills}
                   onChange={(event) =>
@@ -401,6 +580,7 @@ export default function SkillExchangePage() {
 
               <label>
                 Experience level
+
                 <select
                   value={profileForm.experience_level}
                   onChange={(event) =>
@@ -418,6 +598,7 @@ export default function SkillExchangePage() {
 
               <label>
                 Availability
+
                 <input
                   required
                   value={profileForm.availability}
@@ -439,7 +620,10 @@ export default function SkillExchangePage() {
 
           <div className="section-heading exchange-subheading">
             <h2>Find Interview Partners</h2>
-            <p>Connect with students who want to practise too.</p>
+
+            <p>
+              Connect with students who want to practise too.
+            </p>
           </div>
 
           <div className="exchange-grid">
@@ -460,88 +644,96 @@ export default function SkillExchangePage() {
                     <strong>Skills:</strong>{" "}
                     {partner.skills || "Not specified"}
                   </p>
+
                   <p>
                     <strong>Level:</strong> {partner.experience_level}
                   </p>
+
                   <p>
                     <strong>Available:</strong> {partner.availability}
                   </p>
 
-                  <form
-                    onSubmit={(event) =>
-                      handleSendRequest(event, partner.student_id)
-                    }
-                    className="exchange-form compact-form"
-                  >
-                    <label>
-                      Practice date
-                      <input
-                        required
-                        type="date"
-                        min={todayString}
-                        value={requestForm.preferred_date}
-                        onChange={(event) =>
-                          setRequestForm({
-                            ...requestForm,
-                            preferred_date: event.target.value,
-                          })
-                        }
-                      />
-                    </label>
+                  {Number(partner.student_id) !== Number(studentId) && (
+                    <form
+                      onSubmit={(event) =>
+                        handleSendRequest(event, partner.student_id)
+                      }
+                      className="exchange-form compact-form"
+                    >
+                      <label>
+                        Practice date
 
-                    <label>
-                      Practice time
-                      <input
-                        required
-                        value={requestForm.preferred_time}
-                        onChange={(event) =>
-                          setRequestForm({
-                            ...requestForm,
-                            preferred_time: event.target.value,
-                          })
-                        }
-                        placeholder="3:00 PM"
-                      />
-                    </label>
+                        <input
+                          required
+                          type="date"
+                          min={todayString}
+                          value={requestForm.preferred_date}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              preferred_date: event.target.value,
+                            })
+                          }
+                        />
+                      </label>
 
-                    <label>
-                      Campus location
-                      <select
-                        value={requestForm.campus_location}
-                        onChange={(event) =>
-                          setRequestForm({
-                            ...requestForm,
-                            campus_location: event.target.value,
-                          })
-                        }
-                      >
-                        <option>Library Discussion Area</option>
-                        <option>Seminar Hall</option>
-                        <option>College Canteen</option>
-                        <option>Common Area</option>
-                        <option>Available Classroom</option>
-                      </select>
-                    </label>
+                      <label>
+                        Practice time
 
-                    <label>
-                      Message
-                      <textarea
-                        value={requestForm.message}
-                        onChange={(event) =>
-                          setRequestForm({
-                            ...requestForm,
-                            message: event.target.value,
-                          })
-                        }
-                        placeholder="Would you like to practise together?"
-                        rows="3"
-                      />
-                    </label>
+                        <input
+                          required
+                          value={requestForm.preferred_time}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              preferred_time: event.target.value,
+                            })
+                          }
+                          placeholder="3:00 PM"
+                        />
+                      </label>
 
-                    <button className="exchange-primary" type="submit">
-                      Request Practice
-                    </button>
-                  </form>
+                      <label>
+                        Campus location
+
+                        <select
+                          value={requestForm.campus_location}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              campus_location: event.target.value,
+                            })
+                          }
+                        >
+                          <option>Library Discussion Area</option>
+                          <option>Seminar Hall</option>
+                          <option>College Canteen</option>
+                          <option>Common Area</option>
+                          <option>Available Classroom</option>
+                        </select>
+                      </label>
+
+                      <label>
+                        Message
+
+                        <textarea
+                          value={requestForm.message}
+                          onChange={(event) =>
+                            setRequestForm({
+                              ...requestForm,
+                              message: event.target.value,
+                            })
+                          }
+                          placeholder="Would you like to practise together?"
+                          rows="3"
+                        />
+                      </label>
+
+                      <button className="exchange-primary" type="submit">
+                        Request Practice
+                      </button>
+                    </form>
+                  )}
                 </article>
               ))
             )}
@@ -549,10 +741,15 @@ export default function SkillExchangePage() {
         </section>
       )}
 
+      {/* MY REQUESTS AND SESSIONS */}
+
       {!loading && activeTab === "sessions" && (
         <section className="exchange-section">
           <div className="section-heading">
-            <p className="exchange-eyebrow">YOUR ACTIVITY</p>
+            <p className="exchange-eyebrow">
+              YOUR ACTIVITY
+            </p>
+
             <h2>My Practice Requests</h2>
           </div>
 
@@ -570,14 +767,20 @@ export default function SkillExchangePage() {
                     From Student {request.sender_id} to Student{" "}
                     {request.receiver_id}
                   </p>
+
                   <p>
                     {request.preferred_date} at {request.preferred_time}
                   </p>
+
                   <p>{request.campus_location}</p>
+
+                  {request.message && <p>{request.message}</p>}
 
                   <p>
                     <strong>Status:</strong>{" "}
-                    <span className="exchange-tag">{request.status}</span>
+                    <span className="exchange-tag">
+                      {request.status}
+                    </span>
                   </p>
 
                   {Number(request.receiver_id) === Number(studentId) &&
@@ -621,11 +824,23 @@ export default function SkillExchangePage() {
             ) : (
               sessions.map((session) => (
                 <article className="exchange-card" key={session.id}>
-                  <span className="exchange-tag">Scheduled</span>
+                  <span className="exchange-tag">
+                    Scheduled
+                  </span>
+
                   <h3>Mock Interview Session</h3>
-                  <p><strong>Date:</strong> {session.session_date}</p>
-                  <p><strong>Time:</strong> {session.session_time}</p>
-                  <p><strong>Location:</strong> {session.campus_location}</p>
+
+                  <p>
+                    <strong>Date:</strong> {session.session_date}
+                  </p>
+
+                  <p>
+                    <strong>Time:</strong> {session.session_time}
+                  </p>
+
+                  <p>
+                    <strong>Location:</strong> {session.campus_location}
+                  </p>
                 </article>
               ))
             )}
