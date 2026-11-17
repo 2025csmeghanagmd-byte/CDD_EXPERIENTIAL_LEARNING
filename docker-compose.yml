@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: careerbridge_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: careerbridge
+      MYSQL_USER: cb_user
+      MYSQL_PASSWORD: cb_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: careerbridge_backend
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=mysql+pymysql://cb_user:cb_password@db:3306/careerbridge
+      - SECRET_KEY=careerbridge-secret-key-2026
+      - JWT_SECRET_KEY=careerbridge-shared-jwt-secret-key-2026
+      - FLASK_ENV=production
+      - PORT=5000
+    ports:
+      - "5000:5000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: careerbridge_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  mysql_data:
+
